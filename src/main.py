@@ -66,6 +66,18 @@ def atualizar_led(estado):
     else: 
         set_color(100, 0, 100)
 
+def mensagem(estado):
+    if estado == "SECO_CRITICO":
+        print(" Estou em uma situação crítica, preciso de água imediatamente.")
+    elif estado == "SECO":
+        print("Estou com sede.. Pode me ajudar?")
+    elif estado == "IDEAL":
+        print("Estou muito bem, obrigada por cuidar de mim.")
+    elif estado == "UMIDO":
+        print("Acho que já recebi água suficiente...")
+    else: 
+        print("Estou recebendo água demais, isso está me prejudicando.")
+
 
 while True:
     agua_adicionada, estado_anterior_botao = verificar_botao(estado_anterior_botao)
@@ -81,9 +93,15 @@ while True:
         umidade_atual = 4095
 
     estado_da_planta = determinar_estado(umidade_atual)
-
+    
+    print("   STATUS DA PLANTA")
+    print()
+    print("------------------------")
     print(" Umidade:", umidade_atual)
     print(" Estado:", estado_da_planta)
+    print() 
+    mensagem(estado_da_planta)
+    print("------------------------")
 
     atualizar_led(estado_da_planta)
 
