@@ -2,10 +2,15 @@
   "version": 1,
   "author": "thomas magalhaes",
   "editor": "wokwi",
-  "main": "main.py",
   "parts": [
     { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 48, "left": -100.76, "attrs": {} },
-    { "type": "wokwi-rgb-led", "id": "rgb1", "top": -24.8, "left": 87.5, "attrs": {} },
+    {
+      "type": "wokwi-rgb-led",
+      "id": "rgb1",
+      "top": -24.8,
+      "left": 87.5,
+      "attrs": { "common": "cathode" }
+    },
     { "type": "wokwi-potentiometer", "id": "pot1", "top": -10.9, "left": -230.6, "attrs": {} },
     {
       "type": "wokwi-resistor",
@@ -30,6 +35,13 @@
       "left": 105.05,
       "rotate": 90,
       "attrs": { "value": "1000" }
+    },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn1",
+      "top": 131,
+      "left": -345.6,
+      "attrs": { "color": "green", "xray": "1" }
     }
   ],
   "connections": [
@@ -44,7 +56,9 @@
     [ "rgb1:G", "r2:1", "green", [ "v0" ] ],
     [ "r2:2", "esp:5", "green", [ "h0", "v66" ] ],
     [ "rgb1:B", "r3:1", "blue", [ "v0", "h11.2" ] ],
-    [ "r3:2", "esp:18", "blue", [ "h0", "v27.6" ] ]
+    [ "r3:2", "esp:18", "blue", [ "h0", "v27.6" ] ],
+    [ "esp:GND.1", "btn1:2.r", "black", [ "h0" ] ],
+    [ "btn1:1.r", "esp:33", "green", [ "v0" ] ]
   ],
   "dependencies": {}
 }
