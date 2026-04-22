@@ -1,7 +1,50 @@
 {
   "version": 1,
-  "author": "Uri Shaked",
+  "author": "thomas magalhaes",
   "editor": "wokwi",
-  "parts": [ { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 0, "left": 0, "attrs": {} } ],
-  "connections": [ [ "esp:TX", "$serialMonitor:RX", "", [] ], [ "esp:RX", "$serialMonitor:TX", "", [] ] ]
+  "main": "main.py",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 48, "left": -100.76, "attrs": {} },
+    { "type": "wokwi-rgb-led", "id": "rgb1", "top": -24.8, "left": 87.5, "attrs": {} },
+    { "type": "wokwi-potentiometer", "id": "pot1", "top": -10.9, "left": -230.6, "attrs": {} },
+    {
+      "type": "wokwi-resistor",
+      "id": "r1",
+      "top": 110.4,
+      "left": 66.65,
+      "rotate": 90,
+      "attrs": { "value": "1000" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r2",
+      "top": 72,
+      "left": 85.85,
+      "rotate": 90,
+      "attrs": { "value": "1000" }
+    },
+    {
+      "type": "wokwi-resistor",
+      "id": "r3",
+      "top": 91.2,
+      "left": 105.05,
+      "rotate": 90,
+      "attrs": { "value": "1000" }
+    }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "pot1:SIG", "esp:34", "green", [ "v0" ] ],
+    [ "pot1:VCC", "esp:3V3", "red", [ "v19.2", "h-0.8" ] ],
+    [ "pot1:GND", "esp:GND.1", "black", [ "v0" ] ],
+    [ "esp:GND.2", "rgb1:COM", "black", [ "v0", "h96" ] ],
+    [ "rgb1:R", "r1:1", "red", [ "v0" ] ],
+    [ "r1:2", "esp:4", "red", [ "h0", "v37.2" ] ],
+    [ "rgb1:G", "r2:1", "green", [ "v0" ] ],
+    [ "r2:2", "esp:5", "green", [ "h0", "v66" ] ],
+    [ "rgb1:B", "r3:1", "blue", [ "v0", "h11.2" ] ],
+    [ "r3:2", "esp:18", "blue", [ "h0", "v27.6" ] ]
+  ],
+  "dependencies": {}
 }
