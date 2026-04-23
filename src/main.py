@@ -56,7 +56,7 @@ def determinar_estado(valor_umidade):
 
 
 def atualizar_led(estado):
-    if estado == "SECO_CRITICO":
+    if estado == "SECO_CRITICO ":
         set_color(100, 0, 0)
     elif estado == "SECO":
         set_color(100, 50, 0)
