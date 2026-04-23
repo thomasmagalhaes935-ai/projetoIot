@@ -1,5 +1,6 @@
 from machine import Pin, ADC, PWM
-import time 
+import time
+
 
 potenciometro = ADC(Pin(34))
 potenciometro.atten(ADC.ATTN_11DB)
@@ -7,7 +8,7 @@ potenciometro.atten(ADC.ATTN_11DB)
 botao_regar = Pin(33, Pin.IN, Pin.PULL_UP)
 estado_anterior_botao = 1
 
-umidade_atual = potenciometro.read() 
+umidade_atual = potenciometro.read()
 
 
 def verificar_botao(estado_anterior):
@@ -15,7 +16,7 @@ def verificar_botao(estado_anterior):
     adicionar_agua = 0
 
     if estado_anterior == 1 and estado_atual == 0:
-        adicionar_agua = 700
+        adicionar_agua = 850
 
     return adicionar_agua, estado_atual
 
@@ -34,6 +35,7 @@ pwm_r.freq(1000)
 pwm_g.freq(1000)
 pwm_b.freq(1000)
 
+
 def set_color(r, g, b):
     pwm_r.duty(int(r * 1023 / 100))
     pwm_g.duty(int(g * 1023 / 100))
@@ -43,7 +45,7 @@ def set_color(r, g, b):
 def determinar_estado(valor_umidade):
     if valor_umidade < 800:
         return "SECO_CRITICO"
-    elif valor_umidade < 1500: 
+    elif valor_umidade < 1500:
         return "SECO"
     elif valor_umidade < 3000:
         return "IDEAL"
@@ -51,51 +53,52 @@ def determinar_estado(valor_umidade):
         return "UMIDO"
     else:
         return "EXCESSO"
-    
+
 
 def atualizar_led(estado):
     if estado == "SECO_CRITICO":
-        set_color(100, 0, 0) 
+        set_color(100, 0, 0)
     elif estado == "SECO":
         set_color(100, 50, 0)
     elif estado == "IDEAL":
         set_color(0, 100, 0)
     elif estado == "UMIDO":
         set_color(0, 0, 100)
-    else: 
+    else:
         set_color(100, 0, 100)
+
 
 def mensagem(estado):
     if estado == "SECO_CRITICO":
-        print(" Estou em uma situação crítica, preciso de água imediatamente.")
+        print("Estou em uma situação crítica, preciso de água imediatamente.")
     elif estado == "SECO":
-        print("Estou com sede.. Pode me ajudar?")
+        print("Estou com sede... Pode me ajudar?")
     elif estado == "IDEAL":
         print("Estou muito bem, obrigada por cuidar de mim.")
     elif estado == "UMIDO":
         print("Acho que já recebi água suficiente...")
-    else: 
+    else:
         print("Estou recebendo água demais, isso está me prejudicando.")
 
 
 while True:
     agua_adicionada, estado_anterior_botao = verificar_botao(estado_anterior_botao)
-    
+
     umidade_atual += agua_adicionada
-    
+
     if agua_adicionada > 0:
         print()
         print("------------------------")
         print("REGANDO A PLANTA...")
         print("Aguarde...")
         print("------------------------")
+
         time.sleep(2)
         continue
 
-
     clima_base = potenciometro.read()
-    umidade_atual -= calcular_secagem(clima_base)
     secagem_atual = calcular_secagem(clima_base)
+    umidade_atual -= secagem_atual
 
     if umidade_atual < 0:
         umidade_atual = 0
@@ -103,14 +106,14 @@ while True:
         umidade_atual = 4095
 
     estado_da_planta = determinar_estado(umidade_atual)
-    
+
     print("   STATUS DA PLANTA")
     print()
     print("------------------------")
     print(" Umidade:", umidade_atual)
     print(" Estado:", estado_da_planta)
-    print(" Secagem atual = ", calcular_secagem(clima_base))
-    print() 
+    print(" Secagem atual =", secagem_atual)
+    print()
     mensagem(estado_da_planta)
     print("------------------------")
 
