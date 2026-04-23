@@ -15,15 +15,14 @@ def verificar_botao(estado_anterior):
     adicionar_agua = 0
 
     if estado_anterior == 1 and estado_atual == 0:
-        adicionar_agua = 500
-        print("Regando a planta!")
+        adicionar_agua = 700
 
     return adicionar_agua, estado_atual
 
 
 def calcular_secagem(clima):
     base = 30
-    variacao = int((4095 - clima) / 100)
+    variacao = int((4095 - clima) / 20)
     return base + variacao
 
 
@@ -81,11 +80,22 @@ def mensagem(estado):
 
 while True:
     agua_adicionada, estado_anterior_botao = verificar_botao(estado_anterior_botao)
-
+    
     umidade_atual += agua_adicionada
+    
+    if agua_adicionada > 0:
+        print()
+        print("------------------------")
+        print("REGANDO A PLANTA...")
+        print("Aguarde...")
+        print("------------------------")
+        time.sleep(2)
+        continue
+
 
     clima_base = potenciometro.read()
     umidade_atual -= calcular_secagem(clima_base)
+    secagem_atual = calcular_secagem(clima_base)
 
     if umidade_atual < 0:
         umidade_atual = 0
@@ -99,6 +109,7 @@ while True:
     print("------------------------")
     print(" Umidade:", umidade_atual)
     print(" Estado:", estado_da_planta)
+    print(" Secagem atual = ", calcular_secagem(clima_base))
     print() 
     mensagem(estado_da_planta)
     print("------------------------")
