@@ -328,8 +328,6 @@ Características dos Leds individuais:
 
 ## 3️⃣ Componentes Utilizados na Simulação
 
-# 3️⃣ Componentes Utilizados na Simulação
-
 | Componente | Quantidade | Função no Sistema |  Ligação |
 |-----------|-----------|------------------|---------------|
 | ESP32  | 1 | Microcontrolador principal responsável pelo processamento do sistema | — |
