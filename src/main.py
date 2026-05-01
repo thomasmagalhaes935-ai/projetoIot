@@ -107,3 +107,45 @@ def verificar_botoes():
         print(f"{p['nome']} foi regada!")
         time.sleep_ms(150)
     last_btn_states[0] = s1
+
+while True:
+    agora = time.ticks_ms()
+    verificar_botoes()
+
+    if time.ticks_diff(agora, ultimo_pisca) > intervalo_pisca:
+        led_alerta_estado = not led_alerta_estado
+        ultimo_pisca = agora
+
+    clima_valor = potenciometro.read()
+    fator_clima = (4095 - clima_valor) / 1000
+
+    if time.ticks_diff(agora, ultimo_update) > intervalo_log:
+        for i in range(len(plantas)):
+            p = plantas[i]
+            
+            secagem_da_vez = p["taxa_base"] * (1 + fator_clima)
+            p["umidade"] = max(0, p["umidade"] - secagem_da_vez)
+            
+            est = determinar_estado(p["umidade"])
+            if i == planta_focada:
+                leds_selecao[i].value(1)
+            elif est == "SECO_CRITICO":
+                leds_selecao[i].value(1 if led_alerta_estado else 0)
+            else:
+                leds_selecao[i].value(0)
+
+        pf = plantas[planta_focada]
+        estado_f = determinar_estado(pf["umidade"])
+        atualizar_led_rgb(estado_f)
+        
+        secagem_exibir = pf["taxa_base"] * (1 + fator_clima)
+        
+        print("\n==================================")
+        print(f"PLANTA  : {pf['nome']}")
+        print(f"UMIDADE : {int(pf['umidade'])} ({int(pf['umidade']/40.95)}%)")
+        print(f"ESTADO  : {estado_f}")
+        print(f"CLIMA   : {interpretar_clima(clima_valor)}")
+        print(f"SECAGEM : {secagem_exibir:.1f} unidades/s") 
+        print("==================================")
+        
+        ultimo_update = agora
