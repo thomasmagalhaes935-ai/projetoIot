@@ -241,76 +241,155 @@ Preencha todas as seções abaixo de forma **clara, objetiva e técnica**.
 > O principal critério é demonstrar **clareza nas decisões técnicas**, organização e entendimento do sistema embarcado desenvolvido.
 
 ---
+Sistema Inteligente de Monitoramento e Rega Simulada de Plantas
 
 ### 👤 Identificação do Candidato
 
-- **Nome completo:**  
-- **GitHub:* *  
+- **Nome completo: Thomas de Sousa Magalhães 
+- **GitHub:* thomasmagalhaes935-ai
 
 ---
 
 ## 1️⃣ Visão Geral da Solução
 
-Descreva, em poucas palavras:
+O projeto desenvolvido consiste em um **sistema embarcado inteligente para monitoramento de umidade e controle de rega de múltiplas plantas**, utilizando simulação no Wokwi com microcontrolador ESP32.
 
-- Qual é o objetivo do seu projeto  
-- O que o sistema embarcado simulado faz  
-- Como o usuário interage com ele (se aplicável)
+A solução representa quatro tipos de plantas com necessidades hídricas diferentes:
+
+- Cacto  
+- Suculenta  
+- Samambaia  
+- Horta  
+
+Cada planta possui comportamento próprio de secagem e volume de rega.
+
+O sistema permite ao usuário:
+
+- Selecionar a planta monitorada por botão  
+- Regar manualmente a planta selecionada  
+- Alterar as condições climáticas usando o potenciômetro  
+- Visualizar o estado da planta através de LED RGB  
+- Identificar plantas em estados críticos através de LEDs individuais piscantes  
+- Acompanhar dados detalhados via terminal  
+
+O objetivo foi simular um sistema de automação para cuidar de plantas em casa, utilizando conceitos básicos de sistemas embarcados, como leitura de entradas, controle de saídas, uso de estados, temporização e interação com o usuário.
+
+O projeto foi desenvolvido e testado no Wokwi via navegador e depois sua estrutura foi organizada no VS Code para poder ser subida para o github. 
 
 ---
 
 ## 2️⃣ Arquitetura do Sistema Embarcado
 
-Explique a arquitetura lógica do seu projeto, abordando:
+O flux do programa opera em **loop infinito**, realizando continuamente:
 
-- Fluxo principal do programa (`main.py`)  
-- Estrutura de estados, loops ou temporizações  
-- Como os componentes interagem entre si  
+1. Leitura dos botões  
+2. Controle de debounce 
+3. Atualização do pisca-alerta dos LEDs em estado críticos  
+4. Leitura do potenciômetro (clima externo)  
+5. Simulação de perda de umidade das plantas  
+6. Atualização dos LEDs indicadores  
+7. Atualização do LED RGB da planta focada  
+8. Impressão de informações no terminal serial  
 
-Se desejar, utilize tópicos ou um pequeno diagrama em texto.
 
----
+### Entradas:
+
+- **Botão 1 (Azul) :** Regar planta selecionada  
+- **Botão 2 (Preto) :** Alternar planta selecionada   
+- **Potenciômetro:** Simula clima ambiente (Muito Seco/ Seco / Ideal / Umido/ Muito umido)
+
+
+Cada planta possui atributos independentes:
+
+- Nome  
+- Umidade atual  
+- Taxa base de secagem  
+- Quantidade de água quando regada  
+- Última vez regada  
+
+A taxa de secagem é influenciada pelo potenciômetro
+
+O sistema classifica a planta em cinco estados, o estado atual é representado pela cor no LED RGB:
+
+ - Seco_Critico (Vermelho)
+ - Seco (Laranja)
+ - Ideal (Verde)
+ - Umido (Azul)
+ - Excesso (Roxo)
+
+Características dos Leds individuais:
+
+- LED aceso fixo = planta selecionada
+- LED piscando = planta em estado crítico
+- LED apagado = planta não selecionada
+
+
+
 
 ## 3️⃣ Componentes Utilizados na Simulação
 
-Liste os principais componentes definidos no `diagram.json`, por exemplo:
+# 3️⃣ Componentes Utilizados na Simulação
 
-- Tipo de placa utilizada  
-- LEDs, botões, sensores, atuadores, etc.  
-- Função de cada componente no sistema  
-
----
+| Componente | Quantidade | Função no Sistema |  Ligação |
+|-----------|-----------|------------------|---------------|
+| ESP32  | 1 | Microcontrolador principal responsável pelo processamento do sistema | — |
+| Push Button | 2 | Um botão para rega manual e outro para seleção de planta |  33 /  26 |
+| Potenciômetro | 1 | Simula condições climáticas que afetam a secagem das plantas |  34 |
+| LED RGB (Cátodo Comum) | 1 | Indica o estado da planta selecionada por cores |  4, 5 e 18 |
+| LED Laranja | 1 | Indicador da planta 1 | 12 |
+| LED Branco | 1 | Indicador da planta 2 | 13 |
+| LED Roxo | 1 | Indicador da planta 3 | 14 |
+| LED Ciano | 1 | Indicador da planta 4 |  27 |
 
 ## 4️⃣ Decisões Técnicas Relevantes
 
-Explique brevemente decisões importantes tomadas durante o desenvolvimento, como:
+Funções com responsabilidades especificas:
 
-- Organização do código  
-- Uso de funções, estados ou constantes  
-- Estratégias para temporização ou controle lógico  
+ - interpretar_clima()
+ - determinar_estado()
+ - set_color()
+ - atualizar_led_rgb()
+ - verificar_botoes()
 
----
+Uso de dicionário para o armazenamento dos dados das plantas
+
+Uso de time.ticks_ms() para evitar variaveis bloqueantes como o sleep()
+
+
 
 ## 5️⃣ Resultados Obtidos
 
-Descreva o comportamento final do sistema:
+O sistema executa de forma perfeita na simulação Wokwi do navegador
 
-- O que funciona corretamente  
-- Quais requisitos foram atendidos  
-- Resultado observado na simulação do Wokwi  
+Funcionalidades Implementadas:
 
----
+ - Seleção entre 4 plantas
+ - Rega individual por botão
+ - Controle climático por meio do potenciômetro
+ - Simulação dinâmica de secagem
+ - Indicação visual por LED RGB
+ - Alertas críticos com leds piscantes
+ - Terminal informativo com dados técnicos
+
+Durante a simulação:
+
+ - Plantas perdem umidade ao longo do tempo
+ - Clima seco acelera perda de água
+ - Regar recupera a umidade
+ - LEDs respondem em tempo real
+ - Mudança de planta ocorre instantaneamente
 
 ## 6️⃣ Comentários Adicionais (Opcional)
 
-Utilize este espaço para comentar, se desejar:
+A maior dificuldade foi em ajustar corretamente a lógica botões e temporizações.
+O projeto foi refeito 3 vezes para poder compilar perfeitamente no gitActions.
 
-- Dificuldades encontradas  
-- Limitações da solução  
-- Melhorias que você faria com mais tempo  
-- Principais aprendizados durante o desafio  
+Possiveis melhorias futuras:
 
----
+ - Display OLED com os dados mais relevantes
+ - Rega automática por limite mínimo
+ - Histórico de umidade
+ - Sensores reais de solo e temperatura
 
 > ✅ Este relatório faz parte da avaliação técnica.  
 > Clareza, objetividade e organização são tão importantes quanto o funcionamento do código.
