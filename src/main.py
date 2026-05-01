@@ -46,3 +46,44 @@ intervalo_pisca = 500
 
 last_btn_states = [1, 1] 
 debounce_delay = 50 
+
+def interpretar_clima(valor):
+    if valor < 800:
+         return "Muito Seco (Crítico)"
+    elif valor < 1500: 
+        return "Seco"
+    elif valor < 2700: 
+        return "Normal/Ideal"
+    elif valor < 3600: 
+        return "Umido"
+    else: 
+        return "Muito Úmido"
+
+def determinar_estado(valor):
+    if valor < 900: 
+        return "SECO_CRITICO"
+    elif valor < 1600: 
+        return "SECO"
+    elif valor < 2900: 
+        return "IDEAL"
+    elif valor < 3600: 
+        return "UMIDO"
+    else: 
+        return "EXCESSO"
+
+def set_color(r, g, b):
+    pwm_r.duty(int(r * 1023 / 100))
+    pwm_g.duty(int(g * 1023 / 100))
+    pwm_b.duty(int(b * 1023 / 100))
+
+def atualizar_led_rgb(estado):
+    if estado == "SECO_CRITICO": 
+        set_color(100, 0, 0)
+    elif estado == "SECO": 
+        set_color(100, 40, 0)
+    elif estado == "IDEAL": 
+        set_color(0, 100, 0)
+    elif estado == "UMIDO": 
+        set_color(0, 0, 100)
+    else: 
+        set_color(100, 0, 100)
