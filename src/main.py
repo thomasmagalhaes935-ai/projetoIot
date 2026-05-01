@@ -87,3 +87,23 @@ def atualizar_led_rgb(estado):
         set_color(0, 0, 100)
     else: 
         set_color(100, 0, 100)
+
+def verificar_botoes():
+    global planta_focada, last_btn_states
+    
+    s1 = btn_regar.value()
+    s2 = btn_selecao.value()
+    
+    if s2 == 0 and last_btn_states[1] == 1:
+        planta_focada = (planta_focada + 1) % len(plantas)
+        print(f"\nTrocando para: {plantas[planta_focada]['nome']}")
+        time.sleep_ms(150) 
+    last_btn_states[1] = s2
+
+    if s1 == 0 and last_btn_states[0] == 1:
+        p = plantas[planta_focada]
+        p["umidade"] = min(4095, p["umidade"] + p["rega"])
+        p["ultima_rega"] = time.ticks_ms()
+        print(f"{p['nome']} foi regada!")
+        time.sleep_ms(150)
+    last_btn_states[0] = s1
