@@ -29,3 +29,20 @@ pwm_g.freq(PWM_FREQ)
 pwm_b.freq(PWM_FREQ)
 
 leds_selecao = [machine.Pin(p, machine.Pin.OUT) for p in PINOS_LEDS_PLANTAS]
+
+plantas = [
+    {"nome": "Cacto", "umidade": 2600, "taxa_base": 5, "rega": 600, "ultima_rega": 0},
+    {"nome": "Suculenta", "umidade": 2600, "taxa_base": 15, "rega": 800, "ultima_rega": 0},
+    {"nome": "Samambaia", "umidade": 2600, "taxa_base": 50, "rega": 1200, "ultima_rega": 0},
+    {"nome": "Horta", "umidade": 2600, "taxa_base": 30, "rega": 1000, "ultima_rega": 0}
+]
+
+planta_focada = 0
+ultimo_update = time.ticks_ms()
+intervalo_log = 1000
+led_alerta_estado = True
+ultimo_pisca = 0
+intervalo_pisca = 500
+
+last_btn_states = [1, 1] 
+debounce_delay = 50 
