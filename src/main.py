@@ -1,1 +1,15 @@
+import machine
+import time
+
 print("Teste")
+
+POT_PIN = 34
+BOTAO_REGAR_PIN = 33
+BOTAO_SELECAO_PIN = 26 
+
+LED_R_PIN = 4
+LED_G_PIN = 5
+LED_B_PIN = 18
+
+PINOS_LEDS_PLANTAS = [12, 13, 14, 27] 
+PWM_FREQ = 1000
