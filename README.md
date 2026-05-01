@@ -245,7 +245,7 @@ Preencha todas as seções abaixo de forma **clara, objetiva e técnica**.
 ### 👤 Identificação do Candidato
 
 - **Nome completo:**  
-- **GitHub:**  
+- **GitHub:* *  
 
 ---
 
